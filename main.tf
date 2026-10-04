@@ -36,7 +36,7 @@ variable "ssh_public_key" {
   description = "SSH public key used to authenticate to the VM."
   type        = string
   sensitive   = true
-  default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO/Oud5/ONbcPRxPwfqGZuvKLxvHV5txO2fhDjfTACXm terraform-vm-admin"
+  default     = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDJlAt8TqLnpXZ6cL5W/cWCHzumC6Te3NWdmo937Ttqv4eUlVo1y/oa/2HVlrgCJU7j4AxrD2p1XHXclNm1tHVQQXUbnCrm8qxTlF7sBw7ZZF8we0LMXqNEtA9ObN/nmCGpiHihZfYHHjj4PHNSuR72rr0yU3yCeryWlooItbsinyT7uzjENoKh/cBnPvBGGsvZG4GVETI9Oc/jPLqUymVBaYfMcmAKQrkS8qeb0v6b4PtvmDrXDkn4ZMh3vNVXqqI1pxXcjkuqkJHwZxqTKd4USzjRSjh6pQD/Mv1q6QhrX01AX4OUzZ/oXva7T4y+UcXb+XPpuYR5mkpglWKUJAhLOL3h295km0gDcurIu4wk9CUIzm5C3CS9xDuxBB5vouux2ddR2nulSEweuVu8qKpWBgDiuhIK6ZxXzq/zrzNsZLloKtjuObfXvAD0BrxGsjXIGZakrzXQ8LDOefUTGW+0VqOvlly4SdaD6cEm2uhrpX1WKbFyTtv/ekj4SSgYog3CCmAAw4OEcNJz35VMPE3qP2+X7kF/wno7UIvLy0JAGsgD/krucc/AbkzBwh+muc97YJjOjDIyVCxvG3wQD3U/h+L3y1Xvz7AjZpPGAqCRZcWnrYOZ4XA0ndwXEsO29E7reBGMgCinYdA3d3gynzq0OTc4esfKzxai/WraoIl+OQ== terraform-vm-admin"
 }
 
 variable "ssh_source_cidr" {
