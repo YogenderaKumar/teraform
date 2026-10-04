@@ -6,12 +6,6 @@ on:
   pull_request:
     branches: ["main"]
 
-env:
-  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
 jobs:
   terraform:
     name: 'Terraform Plan & Apply'
@@ -24,32 +18,31 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init
+      - name: Terraform Format Check
         run: |
-          echo "Initializing Terraform..."
-          terraform init -reconfigure
+          terraform fmt -check -recursive
+
+      - name: Terraform Init (pull request)
+        if: github.event_name == 'pull_request'
+        run: |
+          terraform init -backend=false -input=false
+
+      - name: Terraform Init (push)
+        if: github.event_name == 'push'
+        run: |
+          terraform init -reconfigure -input=false
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Terraform Format Check
-        run: |
-          echo "Checking Terraform formatting..."
-          terraform fmt -check || true
 
       - name: Terraform Validate
         run: |
-          echo "Validating Terraform configuration..."
           terraform validate
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Terraform Plan
+        if: github.event_name == 'push'
         run: |
           echo "Running Terraform plan..."
           terraform plan -input=false

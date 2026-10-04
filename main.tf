@@ -36,11 +36,13 @@ variable "ssh_public_key" {
 	description = "SSH public key used to authenticate to the VM."
 	type        = string
 	sensitive   = true
+	default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO/Oud5/ONbcPRxPwfqGZuvKLxvHV5txO2fhDjfTACXm terraform-vm-admin"
 }
 
 variable "ssh_source_cidr" {
-	description = "CIDR allowed to reach SSH; set this to your public IP range."
+	description = "CIDR allowed to reach SSH. 0.0.0.0/0 allows SSH from anywhere."
 	type        = string
+	default     = "0.0.0.0/0"
 }
 
 resource "azurerm_resource_group" "vm" {
@@ -136,4 +138,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 	}
 }
 
-
+output "vm_public_ip" {
+	description = "Public IP address assigned to the VM."
+	value       = azurerm_public_ip.vm.ip_address
+}
