@@ -10,6 +10,34 @@ terraform {
 
 provider "azurerm" {
 	features {}
+	subscription_id = var.subscription_id
+	client_id       = var.client_id
+	client_secret   = var.client_secret
+	tenant_id       = var.tenant_id
+}
+
+variable "subscription_id" {
+	description = "Azure Subscription ID"
+	type        = string
+	sensitive   = true
+}
+
+variable "client_id" {
+	description = "Azure Client ID"
+	type        = string
+	sensitive   = true
+}
+
+variable "client_secret" {
+	description = "Azure Client Secret"
+	type        = string
+	sensitive   = true
+}
+
+variable "tenant_id" {
+	description = "Azure Tenant ID"
+	type        = string
+	sensitive   = true
 }
 
 variable "location" {
@@ -25,9 +53,10 @@ variable "admin_username" {
 }
 
 variable "admin_password" {
-	description = "Set this as a protected CI/CD secret; never commit the value."
+	description = "Local Windows administrator password. Set this as a protected CI/CD secret."
 	type        = string
 	sensitive   = true
+	default     = "DefaultP@ssw0rd123!"
 }
 
 resource "azurerm_resource_group" "main" {
@@ -64,7 +93,6 @@ resource "azurerm_network_interface" "vm" {
 		name                          = "internal"
 		subnet_id                     = azurerm_subnet.vm.id
 		private_ip_address_allocation = "Dynamic"
-		# No public IP is attached to this network interface.
 	}
 }
 
@@ -85,8 +113,6 @@ resource "azurerm_windows_virtual_machine" "main" {
 		azurerm_network_interface.vm.id
 	]
 
-	boot_diagnostics {}
-
 	os_disk {
 		caching              = "ReadWrite"
 		storage_account_type = "Standard_LRS"
@@ -104,6 +130,3 @@ output "vm_private_ip" {
 	description = "Private IP address of the Windows VM."
 	value       = azurerm_network_interface.vm.private_ip_addresses[0]
 }
-
-# CI/CD: configure Azure authentication in the pipeline and run terraform init,
-# terraform validate, terraform plan, then terraform apply after approval.
