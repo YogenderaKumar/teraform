@@ -31,32 +31,32 @@ variable "admin_password" {
 }
 
 resource "azurerm_resource_group" "main" {
-  name     = "rg-windows-vm"
+  name     = "rg-windows-vm-terraform"
   location = var.location
 }
 
 resource "azurerm_virtual_network" "main" {
-  name                = "vnet-windows-vm"
+  name                = "vnet-windows-vm-terraform"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  address_space       = ["172.16.0.0/16"]
+  address_space       = ["172.169.0.0/16"]
 }
 
 resource "azurerm_subnet" "vm" {
-  name                 = "snet-vm"
+  name                 = "snet-vm-terraform"
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["172.16.1.0/24"]
+  address_prefixes     = ["172.169.1.0/24"]
 }
 
 resource "azurerm_network_security_group" "vm" {
-  name                = "nsg-windows-vm"
+  name                = "nsg-windows-vm-terraform"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 }
 
 resource "azurerm_network_interface" "vm" {
-  name                = "nic-windows-vm"
+  name                = "nic-windows-vm-terraform"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
@@ -74,8 +74,8 @@ resource "azurerm_network_interface_security_group_association" "vm" {
 }
 
 resource "azurerm_windows_virtual_machine" "main" {
-  name                = "vm-windows-private"
-  computer_name       = "winprivatevm"
+  name                = "vm-windows-terraform"
+  computer_name       = "winvmtf"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   size                = "Standard_B2s"
@@ -88,7 +88,7 @@ resource "azurerm_windows_virtual_machine" "main" {
   boot_diagnostics {}
 
   os_disk {
-    name                 = "osdisk-windows-vm"
+    name                 = "osdisk-windows-vm-terraform"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
@@ -103,7 +103,7 @@ resource "azurerm_windows_virtual_machine" "main" {
 
 output "vm_private_ip" {
   description = "Private IP address of the Windows VM."
-  value       = azurerm_network_interface.vm.private_ip_address
+  value       = azurerm_windows_virtual_machine.main.private_ip_address
 }
 
 # CI/CD: configure Azure authentication in the pipeline and run terraform init,
