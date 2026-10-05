@@ -88,7 +88,6 @@ resource "azurerm_windows_virtual_machine" "main" {
 	boot_diagnostics {}
 
 	os_disk {
-		name                 = "osdisk-windows-vm"
 		caching              = "ReadWrite"
 		storage_account_type = "Standard_LRS"
 	}
@@ -103,7 +102,7 @@ resource "azurerm_windows_virtual_machine" "main" {
 
 output "vm_private_ip" {
 	description = "Private IP address of the Windows VM."
-	value       = azurerm_network_interface.vm.private_ip_address
+	value       = azurerm_network_interface.vm.private_ip_addresses[0]
 }
 
 # CI/CD: configure Azure authentication in the pipeline and run terraform init,
