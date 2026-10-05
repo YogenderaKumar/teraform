@@ -25,7 +25,7 @@ jobs:
       - name: Terraform Init (pull request)
         if: github.event_name == 'pull_request'
         run: |
-          terraform init -backend=false -input=false
+          terraform init -backend=false -input=false -upgrade
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -35,7 +35,7 @@ jobs:
       - name: Terraform Init (push)
         if: github.event_name == 'push'
         run: |
-          terraform init -reconfigure -input=false
+          terraform init -reconfigure -input=false -upgrade
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
