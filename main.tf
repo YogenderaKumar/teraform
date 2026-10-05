@@ -10,34 +10,8 @@ terraform {
 
 provider "azurerm" {
 	features {}
-	subscription_id = var.subscription_id
-	client_id       = var.client_id
-	client_secret   = var.client_secret
-	tenant_id       = var.tenant_id
-}
-
-variable "subscription_id" {
-	description = "Azure Subscription ID"
-	type        = string
-	sensitive   = true
-}
-
-variable "client_id" {
-	description = "Azure Client ID"
-	type        = string
-	sensitive   = true
-}
-
-variable "client_secret" {
-	description = "Azure Client Secret"
-	type        = string
-	sensitive   = true
-}
-
-variable "tenant_id" {
-	description = "Azure Tenant ID"
-	type        = string
-	sensitive   = true
+	# Azure credentials are provided via ARM_* environment variables
+	# ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID, ARM_SUBSCRIPTION_ID
 }
 
 variable "location" {
@@ -56,7 +30,6 @@ variable "admin_password" {
 	description = "Local Windows administrator password. Set this as a protected CI/CD secret."
 	type        = string
 	sensitive   = true
-	default     = "DefaultP@ssw0rd123!"
 }
 
 resource "azurerm_resource_group" "main" {
