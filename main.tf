@@ -39,14 +39,14 @@ resource "azurerm_virtual_network" "main" {
   name                = "vnet-windows-vm"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  address_space       = ["172.168.0.0/16"]
+  address_space       = ["172.16.0.0/16"]
 }
 
 resource "azurerm_subnet" "vm" {
   name                 = "snet-vm"
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["172.168.1.0/24"]
+  address_prefixes     = ["172.16.1.0/24"]
 }
 
 resource "azurerm_network_security_group" "vm" {
